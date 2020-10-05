@@ -7,7 +7,8 @@ function read(){ //Funktioniert
     $json = file_get_contents("beschreibungen.json");
     $beschreibungen = json_decode($json, JSON_OBJECT_AS_ARRAY);
 }
-du gay
+dä robin suckt dicks
+
 
 
 
