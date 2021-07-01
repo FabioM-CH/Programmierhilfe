@@ -11,7 +11,8 @@
   Creation Date:  15.06.2021
 
 .CHANGES
-
+Diverse Anpassungen, Fehler beheben	21.06.2021 - 23.06.2021
+Diverse Anpassungen, Fehler beheben	28.06.2021 - 30.06.2021
 #>
 
 #---------------------------------------------------------[Script Parameter]------------------------------------------------------
@@ -32,7 +33,7 @@ $StartDateTime = Get-Date
 WriteInfoHighlighted "Script started at $StartDateTime"
 
 # Passwort für Administrator in VM abfragen
-$credential = Get-Credential -Username $locadminusername -Message "Please enter complex password for user $locadminusername"
+$credential = Get-Credential -Username $locadminusername -Message ("Bitte komplexes Passwort für " + $locadminusername + " eingeben")
 
 #-----------------------------------------------------------[Ausführung]------------------------------------------------------------
 
