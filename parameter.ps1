@@ -11,12 +11,13 @@
   Creation Date:  15.06.2021
 
 .CHANGES
-
+Diverse Anpassungen, Fehler beheben	21.06.2021 - 23.06.2021
+Diverse Anpassungen, Fehler beheben	28.06.2021 - 30.06.2021
 #>
 
-#-----------------------------------------------------------[Functions]------------------------------------------------------------
+#-----------------------------------------------------------[Funktionen]------------------------------------------------------------
 
-# Functions for text formating with write-host for showing deployment progress
+# Funktionen für Textausgabe während Deployment definieren
 
 function WriteInfo ($message) {
 	Write-Host $message
@@ -42,43 +43,42 @@ function WriteErrorAndExit ($message) {
 	exit
 }
 
-#---------------------------------------------------------[Naming Parameters]------------------------------------------------------
+#---------------------------------------------------------[Namens- Konvention]------------------------------------------------------
 
 <#
+# Ressourcen
 
-Prefix                      fab  (fabio)
-Ressource Group             rg
-NIC                         nic
-Network Security Group      nsg
-Location                    ane (Azure North Europe)
+Prefix                      	fab  (fabio)
+Ressource Gruppe		rg
+Netzwerkkarte	              	nic
+Netzwerk Sicherheits Gruppe	nsg
+Lokation	                ane (Azure North Europe)
 
-# Network
+# Netzwerk
 
-Network Name                fab-vnet1-ane
-Ressource Group             fab-rg-vnet1-ane
-Adress Range                10.0.0.0/16
-Subnet Name                 ServerSubnet
-Subnet Range                10.1.1.0/24
+Netzwerk Name	                fab-vnet1-ane
+Ressource Gruppe	        fab-rg-vnet1-ane
+Adress Bereich Netzwerk         10.0.0.0/16
+Subnet Name	                ServerSubnet
+Adress Bereich Subnet		10.1.1.0/24
 
 # VM
 
-Name                        fab-vm1-ane
-Ressource Group             fab-rg-vm1-ane
-Disk Name                   fab-osdisk-vm1-ane
-Network Security Group      fab-nsg-vm1-ane
-NIC                         fab-nic-vm1-ane
-Public IP                   fab-puip-vm1-ane
+Name                        	fab-vm1-ane
+Ressource Gruppe	        fab-rg-vm1-ane
+Disk Name C:\	                fab-osdisk-vm1-ane
+Netzwerk Sicherheits Gruppe     fab-nsg-vm1-ane
+Netzwerkkarte                   fab-nic-vm1-ane
+Öffentliche IP                  fab-puip-vm1-ane
 
 
 #>
 
 
-#---------------------------------------------------------[Global Parameters]------------------------------------------------------
-
-# Global parameters like subscription id
+#---------------------------------------------------------[Allgemeine Parameter]------------------------------------------------------
 
 # Region
-# Set region which will be used
+# Welche Azure Region wird genutzt
 
 # North Europe		= northeurope
 # West Europe		= westeurope
@@ -86,51 +86,50 @@ Public IP                   fab-puip-vm1-ane
 
 $region = "northeurope"
 
-# Subscription id
+# Subscription ID und Tenant ID
 
 $paramglobal = @{}
 $paramglobal.Add('subscriptionid','ce1116bc-f26b-4ff0-8c1e-98b52a8f3ee2')
 $paramglobal.Add('tenantid','3355afa7-9881-432d-a581-caeac445d097')
 
-# Username local administrator VMs
+# Benutzername für den Administrator Account in der VM
 
 $locadminusername = "fabio"
 
-#---------------------------------------------------------[Tag Parameters]----------------------------------------------------------
+#---------------------------------------------------------[Tag Parameter]----------------------------------------------------------
 
 $creationDate = Get-Date -DisplayHint Date -Format dd.MM.yyyy
 
-# Creator will be set in deployment.ps1 as we need the account logon in Azure first
+# Ersteller wird im Deployment Script abgefragt um Ersteller zu taggen
 
-#---------------------------------------------------------[VNET Parameters]--------------------------------------------------------
+#---------------------------------------------------------[VNET Parameter]--------------------------------------------------------
 
-# VNET parameters
-
-# Change network settings to your needs
 
 $paramvnet = @{}
-$paramvnet.Add('resourcegroup','fab-rg-vnet1-ane')
-$paramvnet.Add('location',$region)
-$paramvnet.Add('netname','fab-vnet1-ane')
-$paramvnet.Add('netaddressprefix','10.0.0.0/16')
-$paramvnet.Add('privatesubnetname','ServerSubnet')
-$paramvnet.Add('privatesubnetaddressprefix','10.1.1.0/24')
-$paramvnet.Add('publicipaddressname','fab-puip-vm1-ane')
-$paramvnet.Add('publicipallocation','static')
+$paramvnet.Add('resourcegroup','fab-rg-vnet1-ane')			# Name der Ressource Gruppe
+$paramvnet.Add('location',$region)					# Lokation
+$paramvnet.Add('netname','fab-vnet1-ane')				# Netzwerk Name
+$paramvnet.Add('netaddressprefix','10.0.0.0/16')			# Adress Bereich Netzwerk
+$paramvnet.Add('privatesubnetname','ServerSubnet')			# Subnet Name
+$paramvnet.Add('privatesubnetaddressprefix','10.1.1.0/24')		# Adress Bereich Subnet
+$paramvnet.Add('publicipaddressname','fab-puip-vm1-ane')		# Öffentliche IP Name
+$paramvnet.Add('publicipallocation','static')				# Statische oder dynamische öffentliche IP
 
 
 
-#---------------------------------------------------------[NSG Parameters]---------------------------------------------------------
+#---------------------------------------------------------[NSG Parameter]---------------------------------------------------------
 
-#Network Security Group rules for RDP
+# NSG für RDP Zugriff vom Internet öffnen (Port 3389)
 
 $nsgrule1 = New-AzNetworkSecurityRuleConfig -Name RDP -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
 
-#---------------------------------------------------------[Storage Parameters]-----------------------------------------------------
+#---------------------------------------------------------[Storage Parameter]-----------------------------------------------------
+
+# Angaben für den Storage Account den wir für die Boot Diagnose der VM brauchen
 
 $paramstoragediag = @{}
-$paramstoragediag.Add('name','mmstodiag1')
-$paramstoragediag.Add('resourcegroup','mm-rg-stodiag1-cwe')
+$paramstoragediag.Add('name','mmstodiag1')				# Name des Storage Accounts
+$paramstoragediag.Add('resourcegroup','mm-rg-stodiag1-cwe')		# Name der Ressource Gruppe
 
 
 #---------------------------------------------------------[VMS Parameters]---------------------------------------------------------
