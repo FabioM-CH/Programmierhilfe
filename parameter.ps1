@@ -126,6 +126,11 @@ $paramvnet.Add('publicipallocation','static')
 
 $nsgrule1 = New-AzNetworkSecurityRuleConfig -Name RDP -Access Allow -Protocol Tcp -Direction Inbound -Priority 100 -SourceAddressPrefix * -SourcePortRange * -DestinationAddressPrefix * -DestinationPortRange 3389
 
+#---------------------------------------------------------[Storage Parameters]-----------------------------------------------------
+
+$paramstoragediag = @{}
+$paramstoragediag.Add('name','mmstodiag1')
+$paramstoragediag.Add('resourcegroup','mm-rg-stodiag1-cwe')
 
 
 #---------------------------------------------------------[VMS Parameters]---------------------------------------------------------
