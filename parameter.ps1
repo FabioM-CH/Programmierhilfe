@@ -86,19 +86,17 @@ Netzwerkkarte                   fab-nic-vm1-ane
 
 $region = "northeurope"
 
-# Subscription ID und Tenant ID
 
 $paramglobal = @{}
-$paramglobal.Add('subscriptionid','ce1116bc-f26b-4ff0-8c1e-98b52a8f3ee2')
-$paramglobal.Add('tenantid','3355afa7-9881-432d-a581-caeac445d097')
+$paramglobal.Add('subscriptionid','ce1116bc-f26b-4ff0-8c1e-98b52a8f3ee2')	# Subscription ID
+$paramglobal.Add('tenantid','3355afa7-9881-432d-a581-caeac445d097')		# Tenant ID
 
-# Benutzername für den Administrator Account in der VM
 
-$locadminusername = "fabio"
+$locadminusername = "fabio"						# Benutzername für den Administrator Account in der VM
 
 #---------------------------------------------------------[Tag Parameter]----------------------------------------------------------
 
-$creationDate = Get-Date -DisplayHint Date -Format dd.MM.yyyy
+$creationDate = Get-Date -DisplayHint Date -Format dd.MM.yyyy		# Datum und Zeit ermitteln
 
 # Ersteller wird im Deployment Script abgefragt um Ersteller zu taggen
 
@@ -132,25 +130,23 @@ $paramstoragediag.Add('name','mmstodiag1')				# Name des Storage Accounts
 $paramstoragediag.Add('resourcegroup','mm-rg-stodiag1-cwe')		# Name der Ressource Gruppe
 
 
-#---------------------------------------------------------[VMS Parameters]---------------------------------------------------------
+#---------------------------------------------------------[VM Parameter]---------------------------------------------------------
 
-# If nicip = empty, DHCP
-# LicensType sets Azure Hybrid Benefit
 
 $paramvm = @{}
-$paramvm.Add('location',$region)
-$paramvm.Add('resourcegroup','fab-rg-vm1-ane')
-$paramvm.Add('name','fab-vm1-ane')
-$paramvm.Add('nsgname','fab-nsg-vm1-ane')
-$paramvm.Add('nicip','')
-$paramvm.Add('nicname','fab-nic-vm1-ane')
-$paramvm.Add('size','Standard_D2s_v3')
-$paramvm.Add('osdisk','fab-osdisk-vm1-ane')
-$paramvm.Add('osdiskcaching','ReadWrite')
-$paramvm.Add('storageaccounttype','StandardSSD_LRS')
-$paramvm.Add('publishername','MicrosoftWindowsServer')
-$paramvm.Add('offer','WindowsServer')
-$paramvm.Add('sku','2019-Datacenter')
-$paramvm.Add('licensetype','Windows_Server')
-$paramvm.Add('datadiskstorageaccounttype','StandardSSD_LRS')
+$paramvm.Add('location',$region)					# Lokation
+$paramvm.Add('resourcegroup','fab-rg-vm1-ane')				# Name der Ressource Gruppe
+$paramvm.Add('name','fab-vm1-ane')					# Name der VM
+$paramvm.Add('nsgname','fab-nsg-vm1-ane')				# Name der Netzwerk Sicherheits Gruppe	
+$paramvm.Add('nicip','')						# private IP Adresse, wenn leer = DHCP
+$paramvm.Add('nicname','fab-nic-vm1-ane')				# Name der Netzwerkkarte
+$paramvm.Add('size','Standard_D2s_v3')					# Grösse, Typ der VM
+$paramvm.Add('osdisk','fab-osdisk-vm1-ane')				# Name der Disk (C:\)
+$paramvm.Add('osdiskcaching','ReadWrite')				# Caching der Disk (C:\)
+$paramvm.Add('storageaccounttype','StandardSSD_LRS')			# Art der Disk (C:\), HDD, SSD
+$paramvm.Add('publishername','MicrosoftWindowsServer')			# Herstellername Betriebssystem
+$paramvm.Add('offer','WindowsServer')					# Betriebssystem
+$paramvm.Add('sku','2019-Datacenter')					# Betriebssystem Version
+$paramvm.Add('licensetype','Windows_Server')				# Lizenztyp, wenn Lizenz schon vorhanden, günstiger = Windows_Server
+$paramvm.Add('datadiskstorageaccounttype','StandardSSD_LRS')		# Art der Disk (D:\), HDD, SSD
 
