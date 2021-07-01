@@ -63,8 +63,8 @@ WriteSuccess ("`t resource group " + $paramvm.resourcegroup + " created successf
 # Deploy VNet
 WriteInfoHighlighted "`t creating VNet"
 try {
-	$vnetwork = New-AzVirtualNetwork -Name $paramvnet.Name -Location $paramvnet.location -ResourceGroupName $paramvnet.resourcegroup -AddressPrefix $paramvnet.netaddressprefix -Tag @{Creator=$azaccount.account.Id; "CreationDate"=$creationDate}
-} catch {
+	$vnetwork = New-AzVirtualNetwork -Name $paramvnet.NetName -Location $paramvnet.location -ResourceGroupName $paramvnet.resourcegroup -AddressPrefix $paramvnet.netaddressprefix -Tag @{Creator=$azaccount.account.Id; "CreationDate"=$creationDate}
+} catch { #netname nicht name
 	WriteErrorAndExitAndExit ("`t failed to create VNet " + $paramvnet.Name)
 }
 WriteSuccess ("`t VNet " + $paramvnet.Name + " created successfully")
@@ -72,7 +72,7 @@ WriteSuccess ("`t VNet " + $paramvnet.Name + " created successfully")
 # Add subnet
 WriteInfoHighlighted "`t adding subnet"
 try {
-    Add-AzVirtualNetworkSubnetConfig -name $paramvnet.privatesubnetname -VirtualNetwork $vnetwork -AddressPrefix $paramvnet.privatesubnetaddressprefix -Tag @{Creator=$azaccount.account.Id; "CreationDate"=$creationDate}
+    Add-AzVirtualNetworkSubnetConfig -name $paramvnet.privatesubnetname -VirtualNetwork $vnetwork -AddressPrefix $paramvnet.privatesubnetaddressprefix #Tag entfernt
 } catch {
 	WriteErrorAndExitAndExit ("`t failed to create subnet " + $paramvnet.privatesubnetname)
 }
@@ -104,6 +104,10 @@ WriteSuccess ("`t resource group " + $paramvm.resourcegroup + " created successf
 $vnet = Get-AzVirtualNetwork -Name $paramvnet.netname -resourcegroupname $paramvnet.resourcegroup
 $subnetconfig = Get-AzVirtualNetworkSubnetConfig -Name $paramvnet.privatesubnetname -VirtualNetwork $vnet
 
+# Create Public IP Address
+$publicIp = New-AzPublicIpAddress -Name $paramvnet.publicipaddressname -ResourceGroupName $paramvm.resourcegroup -AllocationMethod $paramvnet.publicipallocation -Location $region
+
+
 # Deploy network security group
 WriteInfoHighlighted ("`t creating network security group for " + $paramvm.Name)
 try {
@@ -113,8 +117,16 @@ try {
 }
 WriteSuccess ("`t network security group " + $paramvm.nsgname + " created successfully")
 
+# Create network interface configuration
+WriteInfoHighlighted ("`t creating network interface configuration for " + $paramvm.Name)
+try {
+    $ipconfig = New-AzNetworkInterfaceIpConfig -Name "IPConfigPrivate" -PrivateIpAddressversion IPv4 -PrivateIpAddress $paramvm.nicip -Subnetid $subnetconfig.Id -PublicIpAddressId $publicip.Id
+} catch {
+	WriteErrorAndExit ("`t failed to create network interface configuration for " + $paramvm.Name)
+}
+WriteSuccess ("`t network interface configuration for " + $paramvm.Name + " created successfully")
+
 # Deploy network interface card and assign it to the subnet
-$ipconfig = New-AzNetworkInterfaceIpConfig -Name "IPConfigPrivate" -PrivateIpAddressversion IPv4 -PrivateIpAddress $paramvm.nicip -Subnetid $subnetconfig.Id
 WriteInfoHighlighted ("`t creating network interface for " + $paramvm.Name)
 try {
 	$nic = New-AzNetworkInterface -Name $paramvm.nicname -resourcegroupname $paramvm.resourcegroup -Location $paramvm.location `
@@ -135,7 +147,7 @@ $vmconfig = Set-AzVMBootDiagnostic -VM $vmconfig -Enable -resourcegroupname $par
 # Deploy VM
 WriteInfoHighlighted ("`t deploying vm " + $paramvm.Name)
 try {
-	New-AzVM -resourcegroupname $paramvm.resourcegroup -Location $paramvm.location -VM $vmconfig -PublicIpAddressName $paramvnet.publicipaddressname -AllocationMethod $paramvnet.publicipallocation -Verbose -Tag @{Creator=$azaccount.account.Id; "CreationDate"=$creationDate} -DisableBginfoExtension
+	New-AzVM -resourcegroupname $paramvm.resourcegroup -Location $paramvm.location -VM $vmconfig -Verbose -DisableBginfoExtension -Tag @{Creator=$azaccount.account.Id; "CreationDate"=$creationDate} 
 } catch {
 	WriteErrorAndExit ("`t failed to deploy vm " + $paramvm.Name)
 }
