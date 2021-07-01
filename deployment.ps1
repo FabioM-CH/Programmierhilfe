@@ -17,9 +17,9 @@
 #---------------------------------------------------------[Script Parameter]------------------------------------------------------
 
 # Parameter Datei laden
-Write-Host -ForegroundColor Cyan "`t Loading configuration file"
+Write-Host -ForegroundColor Cyan "`t Lade Parameter Datei"
 . "$PSScriptRoot\parameter.ps1"
-WriteSuccess "`t Config file successfully loaded"
+WriteSuccess "`t Parameter Datei erfolgreich geladen"
 
 # Verhalten bei Scriptfehlern auf "Stop" setzen
 $ErrorActionPreference = "Stop"
@@ -34,7 +34,7 @@ WriteInfoHighlighted "Script started at $StartDateTime"
 # Passwort für Administrator in VM abfragen
 $credential = Get-Credential -Username $locadminusername -Message "Please enter complex password for user $locadminusername"
 
-#-----------------------------------------------------------[Execution]------------------------------------------------------------
+#-----------------------------------------------------------[Ausführung]------------------------------------------------------------
 
 #region Azure Logon
 
