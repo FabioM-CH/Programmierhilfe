@@ -90,8 +90,8 @@ $region = "northeurope"
 
 
 $paramglobal = @{}
-$paramglobal.Add('subscriptionid','ce1116bc-f26b-4ff0-8c1e-98b52a8f3ee2')	# Subscription ID
-$paramglobal.Add('tenantid','3355afa7-9881-432d-a581-caeac445d097')		# Tenant ID
+$paramglobal.Add('subscriptionid','025ffb73-56f9-4870-a610-5ec6630f32ea')	# Subscription ID
+$paramglobal.Add('tenantid','154824ef-df76-49db-9b83-099b7d505b91')		# Tenant ID
 
 
 $locadminusername = "fabio"						# Benutzername für den Administrator Account in der VM
