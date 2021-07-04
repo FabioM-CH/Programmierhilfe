@@ -111,7 +111,7 @@ $paramvnet.Add('location',$region)					# Lokation
 $paramvnet.Add('netname','fab-vnet1-ane')				# Netzwerk Name
 $paramvnet.Add('netaddressprefix','10.0.0.0/16')			# Adress Bereich Netzwerk
 $paramvnet.Add('privatesubnetname','ServerSubnet')			# Subnet Name
-$paramvnet.Add('privatesubnetaddressprefix','10.1.1.0/24')		# Adress Bereich Subnet
+$paramvnet.Add('privatesubnetaddressprefix','10.0.0.0/24')		# Adress Bereich Subnet
 $paramvnet.Add('publicipaddressname','fab-puip-vm1-ane')		# Öffentliche IP Name
 $paramvnet.Add('publicipallocation','static')				# Statische oder dynamische öffentliche IP
 
